@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Yine Mi Kızdın Bana?</title>
+  <style>
+    /* Boks eldiveni imleci */
+    body {
+      cursor: url('boks.png') 16 16, auto; /* 'boks.png' görselini aynı klasörde kullanıyoruz */
+      font-family: Arial, sans-serif;  /* Yazı tipi belirleme */
+    }
+
+    /* Oyun alanı */
+    #gameArea {
+      text-align: center;
+      margin-top: 50px;
+      position: relative;
+    }
+
+    /* Oyun başlığını biraz daha yukarıya taşıyalım */
+    h1 {
+      font-size: 60px;  /* Başlık boyutunu büyütme */
+      color: #333;
+      margin-bottom: 20px;  /* Fotoğraf ile mesafeyi arttıralım */
+    }
+
+    /* Fotoğraf ve düşünce balonunun arasına yazıyı yerleştiriyoruz */
+    .thought-bubble {
+      position: absolute;
+      top: 150px;  /* Fotoğraf ile oyun adı arasında, daha aşağıda */
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #fff;
+      border-radius: 15px;
+      padding: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      font-size: 20px;
+      color: #333;
+      display: none;  /* Başlangıçta gizli */
+      max-width: 250px;
+      text-align: center;
+      z-index: 10;  /* Balon, fotoğrafın üstünde olacak şekilde z-index ekliyoruz */
+    }
+
+    /* Düşünce balonunun üçgen kısmı */
+    .thought-bubble::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      bottom: -15px;
+      transform: translateX(-50%);
+      border-width: 15px;
+      border-style: solid;
+      border-color: white transparent transparent transparent;
+    }
+
+    /* Düşünce balonunun animasyonu */
+    .show-thought {
+      display: block;
+      animation: showBubble 0.5s ease-out;
+    }
+
+    @keyframes showBubble {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.5);
+      }
+      100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+    }
+
+    /* Görsel boyutunu büyütme */
+    img {
+      width: 400px;  /* Görselin boyutunu büyüttük */
+      height: 400px;
+      transition: all 0.3s ease;
+      position: relative;
+      margin-top: 20px;  /* Başlık ile fotoğraf arasına mesafe */
+    }
+
+    /* Tıklama efekti */
+    .hit {
+      transform: scale(1.2);  /* Resmi büyütme */
+      animation: hitEffect 0.2s ease-out;  /* Kırmızı ve mor vurma efekti */
+    }
+
+    /* Vurma anındaki kırmızı mor efekt */
+    @keyframes hitEffect {
+      0% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.7), 0 0 40px rgba(255, 0, 0, 0.5);
+      }
+      50% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.7), 0 0 40px rgba(128, 0, 128, 0.5); /* Kırmızı mor geçiş */
+      }
+      100% {
+        box-shadow: 0 0 0 rgba(255, 0, 0, 0), 0 0 0 rgba(128, 0, 128, 0);
+      }
+    }
+
+    /* Puan yazılarını büyütme */
+    #score {
+      font-size: 30px;  /* Puan yazısının boyutunu büyütme */
+      margin-top: 20px;
+      font-weight: bold;
+    }
+
+  </style>
+</head>
+<body>
+
+  <div id="gameArea">
+    <h1>Yine Mi Kızdın Bana?</h1>
+    <div id="thoughtBubble" class="thought-bubble">Sen haklısın canım</div>
+    <img id="playerImage" src="foto.jpg" alt="Player" onclick="hitPlayer()" />
+    <p id="score">Puan: 0</p>
+  </div>
+
+  <script>
+    let score = 0;
+    const playerImage = document.getElementById('playerImage');
+    const scoreDisplay = document.getElementById('score');
+    const thoughtBubble = document.getElementById('thoughtBubble');
+
+    function hitPlayer() {
+      score++;  // Puanı artır
+      scoreDisplay.textContent = 'Puan: ' + score;  // Puanı güncelle
+      playerImage.classList.add('hit');  // Resmi vurulmuş gibi yap
+
+      // Düşünce balonunu göster
+      thoughtBubble.classList.add('show-thought');
+      
+      // Balonun birkaç saniye sonra kaybolmasını sağla
+      setTimeout(() => {
+        thoughtBubble.classList.remove('show-thought');
+      }, 2000);  // 2 saniye sonra kaybolur
+
+      setTimeout(() => {
+        playerImage.classList.remove('hit');  // Efekti kaldır
+      }, 200);  // Efektin süresiyle uyumlu olmalı
+    }
+  </script>
+</body>
+</html>
